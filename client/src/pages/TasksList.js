@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { TaskCard } from "../components/taskCard";
 import { getTasks } from "../features/tasks/tasksSlice";
 
 function TasksList() {
@@ -17,20 +18,14 @@ function TasksList() {
       {/* {responseStatus === "success" && <p>{responseMessage}</p>} */}
       {responseStatus === "rejected" && <p>{responseMessage}</p>}
 
-      <h1>Tasks</h1>
-
       {responseStatus === "pending" ? (
         <p>Loading...</p>
       ) : (
-        tasks.map((task) => (
-          <div key={task._id}>
-            {task.title}
-            <p>{task.description}</p>
-
-            <button>edit</button>
-            <button>delete</button>
-          </div>
-        ))
+        <div className="grid grid-cols-4 gap-3">
+          {tasks.map((task) => (
+            <TaskCard task={task} key={task._id} />
+          ))}
+        </div>
       )}
     </div>
   );
