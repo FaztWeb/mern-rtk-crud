@@ -34,7 +34,10 @@ export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async (task, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${baseURL}/api/tasks/${task.id}`, task);
+      const response = await axios.put(`${baseURL}/api/tasks/${task._id}`, {
+        title: task.title,
+        description: task.description,
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);

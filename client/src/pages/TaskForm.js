@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createTask } from "../features/tasks/tasksSlice";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createTask, updateTask } from "../features/tasks/tasksSlice";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { getTask } from "../api/tasks";
 
 function TaskForm() {
   const [task, setTask] = useState({
@@ -10,12 +11,37 @@ function TaskForm() {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { responseStatus, responseMessage } = useSelector((state) => state.tasks);
 
-  const handleSubmit = (e) => {
+  const params = useParams();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createTask(task));
-    navigate("/");
+
+    if (params.id) {
+      dispatch(
+        updateTask({
+          _id: params.id,
+          title: task.title,
+          description: task.description,
+        })
+      );
+    } else {
+      dispatch(createTask(task));
+    }
   };
+
+  useEffect(() => {
+    const loadTask = async () => {
+      try {
+        const response = await getTask(params.id);
+        setTask(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    loadTask();
+  }, [params.id]);
 
   const handleChange = (e) => {
     setTask({
@@ -26,6 +52,8 @@ function TaskForm() {
 
   return (
     <div className="max-w-sm mx-auto">
+      {/* {responseStatus === "success" && <Navigate to="/" />}
+      {responseStatus === "rejected" && <p>{responseMessage}</p>} */}
       <form onSubmit={handleSubmit} className="bg-zinc-800 p-10">
         <label htmlFor="title" className="block">
           Title:
@@ -37,6 +65,7 @@ function TaskForm() {
           onChange={handleChange}
           className="p-2 w-full text-black bg-zinc-400 placeholder:text-neutral-600"
           autoFocus
+          value={task.title}
         />
 
         <label htmlFor="description" className="block">
@@ -48,6 +77,7 @@ function TaskForm() {
           placeholder="Write a Description"
           onChange={handleChange}
           className="p-2 w-full text-black bg-zinc-400 placeholder:text-neutral-600"
+          value={task.description}
         ></textarea>
 
         <button className="block bg-indigo-500 px-2 py-1 w-full">Save</button>

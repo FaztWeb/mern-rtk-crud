@@ -11,7 +11,8 @@ function TasksList() {
 
   useEffect(() => {
     dispatch(getTasks());
-  }, [dispatch]);
+    console.log('TasksList: useEffect');
+  }, []);
 
   return (
     <div>
@@ -21,7 +22,7 @@ function TasksList() {
       {responseStatus === "pending" ? (
         <p>Loading...</p>
       ) : (
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {tasks.map((task) => (
             <TaskCard task={task} key={task._id} />
           ))}
