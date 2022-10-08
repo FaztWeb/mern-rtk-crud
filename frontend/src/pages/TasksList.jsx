@@ -11,7 +11,6 @@ function TasksList() {
 
   useEffect(() => {
     dispatch(getTasks());
-    console.log('TasksList: useEffect');
   }, []);
 
   return (

@@ -11,7 +11,9 @@ function TaskForm() {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { responseStatus, responseMessage } = useSelector((state) => state.tasks);
+  const { responseStatus, responseMessage } = useSelector(
+    (state) => state.tasks
+  );
 
   const params = useParams();
 
@@ -29,18 +31,23 @@ function TaskForm() {
     } else {
       dispatch(createTask(task));
     }
+
+    return navigate("/");
   };
 
   useEffect(() => {
-    const loadTask = async () => {
-      try {
-        const response = await getTask(params.id);
-        setTask(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    loadTask();
+    if (params.id) {
+      console.log(params.id);
+      const loadTask = async () => {
+        try {
+          const response = await getTask(params.id);
+          setTask(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      loadTask();
+    }
   }, [params.id]);
 
   const handleChange = (e) => {
@@ -55,20 +62,20 @@ function TaskForm() {
       {/* {responseStatus === "success" && <Navigate to="/" />}
       {responseStatus === "rejected" && <p>{responseMessage}</p>} */}
       <form onSubmit={handleSubmit} className="bg-zinc-800 p-10">
-        <label htmlFor="title" className="block">
-          Title:
+        <label htmlFor="title" className="block text-sm font-medium py-1">
+          Title
         </label>
         <input
           type="text"
           placeholder="Task name"
           name="title"
           onChange={handleChange}
-          className="p-2 w-full text-black bg-zinc-400 placeholder:text-neutral-600"
+          className="p-2 w-full text-white bg-zinc-700 placeholder:text-neutral-400 rounded-md"
           autoFocus
           value={task.title}
         />
 
-        <label htmlFor="description" className="block">
+        <label htmlFor="description" className="block text-sm font-medium py-1">
           Description:
         </label>
         <textarea
@@ -76,7 +83,7 @@ function TaskForm() {
           rows="3"
           placeholder="Write a Description"
           onChange={handleChange}
-          className="p-2 w-full text-black bg-zinc-400 placeholder:text-neutral-600"
+          className="p-2 w-full text-white bg-zinc-700 placeholder:text-neutral-400 rounded-md"
           value={task.description}
         ></textarea>
 

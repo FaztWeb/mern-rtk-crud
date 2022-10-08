@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js --ignore client"
+    "dev": "nodemon backend/index.js --ignore frontend"
   },
   "keywords": [],
   "author": "",
